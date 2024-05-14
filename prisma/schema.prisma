@@ -14,29 +14,29 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  name          String
-  phone_number  String
-  role          String
-  slots         Slot[]
-  appointments  Appointment[]
+  id                Int             @id @default(autoincrement())
+  name              String
+  phone_number      String
+  role              String
+  slots             Slot[]
+  appointments      Appointment[]
 }
 
 model Slot {
-  id        Int          @id @default(autoincrement())
-  coach     User         @relation(fields: [coach_id], references: [id])
-  coach_id  Int
-  start_time DateTime
-  end_time   DateTime
-  booked     Boolean     @default(false)
-  appointment Appointment?
+  id                Int             @id @default(autoincrement())
+  coach             User            @relation(fields: [coach_id], references: [id])
+  coach_id          Int
+  start_time        DateTime
+  end_time          DateTime
+  booked            Boolean         @default(false)
+  appointment       Appointment?    // A slot may or may not have an appointment
 }
 
 model Appointment {
-  id                Int     @id @default(autoincrement())
-  slot              Slot    @relation(fields: [slot_id], references: [id])
-  slot_id           Int
-  student           User    @relation(fields: [student_id], references: [id])
+  id                Int             @id @default(autoincrement())
+  slot              Slot            @relation(fields: [slot_id], references: [id])
+  slot_id           Int             @unique
+  student           User            @relation(fields: [student_id], references: [id])
   student_id        Int
   coach_notes       String?
   student_satisfaction Int?
