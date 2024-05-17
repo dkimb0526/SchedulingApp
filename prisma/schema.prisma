@@ -4,40 +4,37 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model User {
-  id                Int             @id @default(autoincrement())
-  name              String
-  phone_number      String
-  role              String
-  slots             Slot[]          @relation("coach_slots")
-  appointments      Appointment[]   @relation("student_appointments")
+  id       Int      @id @default(autoincrement())
+  role     Role
+  name     String
+  phone    String
+  slots    Slot[]   @relation("CoachSlots")
+  bookings Slot[]   @relation("StudentBookings")
 }
 
 model Slot {
-  id                Int             @id @default(autoincrement())
-  coach             User            @relation("coach_slots", fields: [coach_id], references: [id])
-  coach_id          Int
-  start_time        DateTime
-  end_time          DateTime
-  booked            Boolean         @default(false)
-  appointment       Appointment?
+  id          Int      @id @default(autoincrement())
+  coachId     Int
+  studentId   Int?
+  startTime   DateTime
+  satisfaction Int?
+  notes       String?
+
+  coach    User @relation("CoachSlots", fields: [coachId], references: [id])
+  student  User? @relation("StudentBookings", fields: [studentId], references: [id])
 }
 
-model Appointment {
-  id                Int             @id @default(autoincrement())
-  slot              Slot            @relation(fields: [slot_id], references: [id])
-  slot_id           Int             @unique
-  student           User            @relation("student_appointments", fields: [student_id], references: [id])
-  student_id        Int
-  coach_notes       String?
-  student_satisfaction Int?
+enum Role {
+  COACH
+  STUDENT
 }

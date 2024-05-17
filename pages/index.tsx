@@ -1,24 +1,13 @@
-// pages/index.tsx
-import React, { useState } from "react";
-import AvailabilityForm from "../components/AvailabilityForm";
-import SlotList from "../components/SlotList";
-import PastSessions from "../components/PastSessions";
-import LoginSwitcher from "../components/LoginSwitcher";
+import React from "react";
+import Link from "next/link";
 
 const Home = () => {
-  const [userType, setUserType] = useState("student"); // Default to student
-
   return (
     <div>
-      <LoginSwitcher setUserType={setUserType} />
-      {userType === "coach" ? (
-        <>
-          <AvailabilityForm />
-          <PastSessions />
-        </>
-      ) : (
-        <SlotList />
-      )}
+      <h1>Stepful Coaching</h1>
+      <Link href="/coach">Coach View</Link>
+      <br />
+      <Link href="/student">Student View</Link>
     </div>
   );
 };

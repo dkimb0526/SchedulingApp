@@ -4,23 +4,21 @@ import { prisma } from "../../../prisma";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
-      const slots = await prisma.slot.findMany({
-        include: {
-          coach: true,
-          student: true,
-        },
+      const students = await prisma.user.findMany({
+        where: { role: "STUDENT" },
+        include: { bookings: true },
       });
-      res.status(200).json(slots);
+      res.status(200).json(students);
     } catch (error) {
       res.status(500).json({ error: "Internal server error" });
     }
   } else if (req.method === "POST") {
-    const { coachId, startTime } = req.body;
+    const { name, phone } = req.body;
     try {
-      const slot = await prisma.slot.create({
-        data: { coachId, startTime },
+      const student = await prisma.user.create({
+        data: { name, phone, role: "STUDENT" },
       });
-      res.status(201).json(slot);
+      res.status(201).json(student);
     } catch (error) {
       res.status(500).json({ error: "Internal server error" });
     }
