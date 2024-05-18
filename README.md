@@ -1,40 +1,83 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Scheduling App
+Overview
+The Scheduling App is a full-stack application designed to streamline scheduling between coaches and students. Coaches can create available slots, provide feedback, and rate their sessions, while students can view and book these slots. The app supports real-time updates for a seamless user experience.
 
-## Getting Started
+Features
+Coach Functionality
+Add Slots: Coaches can create new available slots.
+View Upcoming Booked Slots: Coaches can see their upcoming sessions.
+View Empty Slots: Coaches can view slots that are not yet booked.
+Past Sessions: Coaches can view and edit notes and satisfaction ratings for past sessions.
+Student Functionality
+View Available Slots: Students can see and book slots that are available.
+Book Slots: Students can book slots and view details of their upcoming sessions.
+View Coach Details: After booking a session, students can view the coach's phone number.
+Real-time Updates
+Ensure that slot creation, booking, and updates are reflected in real-time across the app.
+Technology Stack
+Frontend: React, Next.js
+Backend: Node.js, Express
+Database: PostgreSQL, Prisma ORM
+Setup and Installation
+Prerequisites
+Node.js (v14 or later)
+PostgreSQL (v12 or later)
+Installation Steps
+Clone the repository:
 
-First, run the development server:
+sh
+Copy code
+git clone https://github.com/dkimb0526/scheduling-app.git
+cd scheduling-app
+Install dependencies:
 
-```bash
+sh
+Copy code
+npm install
+Set up the database:
+
+Create a PostgreSQL database.
+Copy .env.example to .env and update the environment variables with your database credentials.
+Run the Prisma migrations to set up the database schema:
+sh
+Copy code
+npx prisma migrate dev --name init
+Seed the database:
+
+sh
+Copy code
+npx ts-node prisma/seed.ts
+Run the development server:
+
+sh
+Copy code
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The app should now be running on http://localhost:3000.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Project Structure
+/components: React components used throughout the app.
+/pages: Next.js pages for routing.
+/pages/api: API routes for handling backend logic.
+/prisma: Prisma schema and migration files.
+/styles: None
+API Endpoints
+Coaches
+GET /api/coaches: Retrieve a list of all coaches.
+GET /api/coaches/[id]: Retrieve data for a specific coach.
+POST /api/slots: Create a new slot for a coach.
+PUT /api/slots/[id]: Update a slot with notes and satisfaction.
+Students
+GET /api/students: Retrieve a list of all students.
+GET /api/students/[id]: Retrieve data for a specific student.
+POST /api/slots/book: Book a slot for a student.
+Usage
+Coaches:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Navigate to the coach's page to view and manage slots.
+Add new slots using the provided form.
+View past sessions and edit notes and satisfaction ratings.
+Students:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-=======
-# SchedulingApp
->>>>>>> 7cd3657bda0baba78cb2e0b918c68d33fe04412d
+Navigate to the student's page to view available slots.
+Book slots and see details of upcoming sessions.
+After booking a session, view the coach's phone number.
