@@ -27,7 +27,7 @@ Clone the repository:
 
 sh
 Copy code
-git clone https://github.com/yourusername/scheduling-app.git
+git clone https://github.com/dkimb0526/scheduling-app.git
 cd scheduling-app
 Install dependencies:
 
@@ -59,7 +59,7 @@ Project Structure
 /pages: Next.js pages for routing.
 /pages/api: API routes for handling backend logic.
 /prisma: Prisma schema and migration files.
-/styles: CSS and styling files.
+/styles: None
 API Endpoints
 Coaches
 GET /api/coaches: Retrieve a list of all coaches.
