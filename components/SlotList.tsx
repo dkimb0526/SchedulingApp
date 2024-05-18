@@ -1,50 +1,39 @@
 import React from "react";
 
-interface Slot {
-  id: number;
-  startTime: string;
-  coach?: { name: string };
-  student?: { name: string };
-  satisfaction?: number;
-  notes?: string;
-}
+const SlotList = ({ slots, role, onSelectSlot, onBookSlot }) => {
+  console.log("SlotList received slots:", slots); // Add logging
 
-interface SlotListProps {
-  slots: Slot[];
-  onSelectSlot?: (slot: Slot) => void;
-  onBookSlot?: (slotId: number) => void;
-}
+  if (!slots || slots.length === 0) {
+    return <p>No slots available</p>;
+  }
 
-const SlotList: React.FC<SlotListProps> = ({
-  slots,
-  onSelectSlot,
-  onBookSlot,
-}) => {
   return (
-    <div>
-      <h3>Slots</h3>
-      <ul>
-        {slots.map((slot) => (
-          <li key={slot.id}>
-            {new Date(slot.startTime).toLocaleString()} with{" "}
-            {slot.coach ? slot.coach.name : "Unknown Coach"}
-            {slot.student && (
-              <>
-                <p>Booked by: {slot.student.name}</p>
-                {slot.satisfaction && <p>Satisfaction: {slot.satisfaction}</p>}
-                {slot.notes && <p>Notes: {slot.notes}</p>}
-              </>
-            )}
-            {onBookSlot && !slot.student && (
-              <button onClick={() => onBookSlot(slot.id)}>Book</button>
-            )}
-            {onSelectSlot && (
-              <button onClick={() => onSelectSlot(slot)}>Details</button>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul>
+      {slots.map((slot) => (
+        <li key={slot.id}>
+          <p>Start Time: {new Date(slot.startTime).toLocaleString()}</p>
+          {role === "coach" && slot.student ? (
+            <>
+              <p>Student: {slot.student.name}</p>
+              <button onClick={() => alert(`Phone: ${slot.student.phone}`)}>
+                View Phone
+              </button>
+              <button onClick={() => alert(`Notes: ${slot.notes}`)}>
+                View Notes
+              </button>
+            </>
+          ) : role === "student" && slot.coach ? (
+            <>
+              <p>Coach: {slot.coach.name}</p>
+              <button onClick={() => onBookSlot(slot.id)}>Book Slot</button>
+            </>
+          ) : null}
+          {onSelectSlot && (
+            <button onClick={() => onSelectSlot(slot)}>View Details</button>
+          )}
+        </li>
+      ))}
+    </ul>
   );
 };
 

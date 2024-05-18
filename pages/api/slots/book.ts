@@ -2,30 +2,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../prisma";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id } = req.query;
-
-  if (req.method === "GET") {
-    try {
-      const slot = await prisma.slot.findUnique({
-        where: { id: Number(id) },
-        include: { coach: true, student: true },
-      });
-      if (slot) {
-        res.status(200).json(slot);
-      } else {
-        res.status(404).json({ message: "Slot not found" });
-      }
-    } catch (error) {
-      console.error("Error fetching slot:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  } else if (req.method === "POST") {
-    const { studentId } = req.body;
+  if (req.method === "POST") {
+    const { slotId, studentId } = req.body;
 
     try {
-      console.log(`Booking slot ${id} for student ${studentId}`); // Add logging
+      console.log(`Booking slot ${slotId} for student ${studentId}`); // Add logging
       const slot = await prisma.slot.update({
-        where: { id: Number(id) },
+        where: { id: Number(slotId) },
         data: { studentId: Number(studentId) },
         include: { coach: true, student: true }, // Include coach and student details in the response
       });

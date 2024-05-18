@@ -1,39 +1,39 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-interface AddSlotFormProps {
-  coachId: number;
-  onSlotAdded: () => void;
-}
-
-const AddSlotForm: React.FC<AddSlotFormProps> = ({ coachId, onSlotAdded }) => {
+const AddSlotForm = ({ coachId }) => {
   const [startTime, setStartTime] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Ensure the startTime includes seconds and milliseconds
+    const formattedStartTime = new Date(startTime).toISOString();
+
     try {
-      await axios.post("/api/slots", { coachId, startTime });
-      setStartTime("");
-      onSlotAdded();
+      await axios.post("/api/slots", {
+        coachId,
+        startTime: formattedStartTime,
+      });
+      alert("Slot created successfully!");
+      setStartTime(""); // Clear the form after submission
     } catch (error) {
-      console.error("Error adding slot:", error);
+      console.error("Error creating slot:", error);
+      alert("Failed to create slot.");
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Add New Slot</h3>
-      <div>
-        <label>
-          Start Time:
-          <input
-            type="datetime-local"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            required
-          />
-        </label>
-      </div>
+      <label>
+        Start Time:
+        <input
+          type="datetime-local"
+          value={startTime}
+          onChange={(e) => setStartTime(e.target.value)}
+          required
+        />
+      </label>
       <button type="submit">Add Slot</button>
     </form>
   );

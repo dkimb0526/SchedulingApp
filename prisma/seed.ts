@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
@@ -37,56 +37,54 @@ async function main() {
     },
   });
 
-  // Create Slots for Coach Alice
-  await prisma.slot.createMany({
-    data: [
-      {
-        coachId: coach1.id,
-        startTime: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
-      },
-      {
-        coachId: coach1.id,
-        startTime: new Date(Date.now() + 1000 * 60 * 60 * 48).toISOString(),
-      },
-    ],
-  });
-
-  // Create Slots for Coach Bob
-  await prisma.slot.createMany({
-    data: [
-      {
-        coachId: coach2.id,
-        startTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2).toISOString(),
-      },
-      {
-        coachId: coach2.id,
-        startTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3).toISOString(),
-      },
-    ],
-  });
-
-  // Book a slot for Student Charlie with Coach Alice
-  await prisma.slot.update({
-    where: { id: 1 }, // Assuming the first slot created is the one we want to book
-    data: { studentId: student1.id },
-  });
-
-  // Book a slot for Student Dana with Coach Bob
-  await prisma.slot.update({
-    where: { id: 3 }, // Assuming the third slot created is the one we want to book
-    data: { studentId: student2.id },
-  });
-
-  // Record satisfaction and notes for a completed call
-  await prisma.slot.update({
-    where: { id: 1 },
+  // Create Slots for Coach Alice and assign to Student Charlie
+  const slot1 = await prisma.slot.create({
     data: {
-      satisfaction: 5,
-      notes: "Excellent session. Charlie was very engaged.",
+      coachId: coach1.id,
+      studentId: student1.id, // Assign to Student Charlie
+      startTime: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
     },
   });
 
-  console.log("Seed data created successfully.");
+  const slot2 = await prisma.slot.create({
+    data: {
+      coachId: coach1.id,
+      studentId: student2.id, // Assign to Student Dana
+      startTime: new Date(Date.now() + 1000 * 60 * 60 * 48).toISOString(),
+    },
+  });
+
+  // Create Slots for Coach Bob
+  const slot3 = await prisma.slot.create({
+    data: {
+      coachId: coach2.id,
+      startTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2).toISOString(),
+    },
+  });
+
+  const slot4 = await prisma.slot.create({
+    data: {
+      coachId: coach2.id,
+      startTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3).toISOString(),
+    },
+  });
+
+  // Log created data
+  const allSlots = await prisma.slot.findMany({
+    include: {
+      coach: true,
+      student: true,
+    },
+  });
+  console.log("All slots:", allSlots);
+
+  const allUsers = await prisma.user.findMany({
+    include: {
+      coachSlots: true,
+      studentSlots: true,
+    },
+  });
+  console.log("All users with slots:", allUsers);
 }
 
 main()

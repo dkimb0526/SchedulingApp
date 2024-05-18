@@ -1,36 +1,68 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import SlotList from "./SlotList";
-import SlotDetail from "./SlotDetail";
+import axios from "axios";
 
-const CoachView = () => {
-  const [slots, setSlots] = useState([]);
-  const [selectedSlot, setSelectedSlot] = useState(null);
+const CoachView = ({ coachData }) => {
+  if (!coachData) {
+    return <p>Loading...</p>;
+  }
 
-  useEffect(() => {
-    axios
-      .get("/api/coaches/1")
-      .then((response) => setSlots(response.data.slots));
-  }, []);
+  const [startTime, setStartTime] = useState("");
+  const [coachSlots, setCoachSlots] = useState(coachData.coachSlots);
+
+  const upcomingSlots = coachSlots.filter(
+    (slot) => slot.student && new Date(slot.startTime) > new Date()
+  );
+  const emptySlots = coachSlots.filter(
+    (slot) => !slot.student && new Date(slot.startTime) > new Date()
+  );
 
   const handleSelectSlot = (slot) => {
-    setSelectedSlot(slot);
+    console.log("Selected slot:", slot);
   };
 
-  const handleUpdateSlot = (updatedSlot) => {
-    setSlots((prevSlots) =>
-      prevSlots.map((slot) => (slot.id === updatedSlot.id ? updatedSlot : slot))
-    );
-    setSelectedSlot(updatedSlot);
+  const handleAddSlot = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("/api/slots", {
+        coachId: coachData.id,
+        startTime,
+      });
+      setCoachSlots([...coachSlots, response.data]);
+      setStartTime("");
+    } catch (error) {
+      console.error("Error adding slot:", error);
+    }
   };
 
   return (
     <div>
-      <h2>Coach View</h2>
-      <SlotList slots={slots} onSelectSlot={handleSelectSlot} />
-      {selectedSlot && (
-        <SlotDetail slot={selectedSlot} onUpdateSlot={handleUpdateSlot} />
-      )}
+      <h2>{coachData.name}'s View</h2>
+      <h3>Add New Slot</h3>
+      <form onSubmit={handleAddSlot}>
+        <label>
+          Start Time:
+          <input
+            type="datetime-local"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            required
+          />
+        </label>
+        <button type="submit">Add Slot</button>
+      </form>
+      <h3>Upcoming Slots</h3>
+      <SlotList
+        slots={upcomingSlots}
+        role="coach"
+        onSelectSlot={handleSelectSlot}
+      />
+      <h3>Empty Slots</h3>
+      <SlotList
+        slots={emptySlots}
+        role="coach"
+        onSelectSlot={handleSelectSlot}
+      />
     </div>
   );
 };
