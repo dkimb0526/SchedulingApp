@@ -37,35 +37,64 @@ async function main() {
     },
   });
 
-  // Create Slots for Coach Alice and assign to Student Charlie
-  const slot1 = await prisma.slot.create({
+  // Create Future Slots for Coach Alice and assign to Student Charlie
+  await prisma.slot.create({
     data: {
       coachId: coach1.id,
       studentId: student1.id, // Assign to Student Charlie
       startTime: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
+      satisfaction: null,
+      notes: null,
     },
   });
 
-  const slot2 = await prisma.slot.create({
+  await prisma.slot.create({
     data: {
       coachId: coach1.id,
       studentId: student2.id, // Assign to Student Dana
       startTime: new Date(Date.now() + 1000 * 60 * 60 * 48).toISOString(),
+      satisfaction: null,
+      notes: null,
     },
   });
 
-  // Create Slots for Coach Bob
-  const slot3 = await prisma.slot.create({
+  // Create Future Slots for Coach Bob
+  await prisma.slot.create({
     data: {
       coachId: coach2.id,
       startTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2).toISOString(),
+      satisfaction: null,
+      notes: null,
     },
   });
 
-  const slot4 = await prisma.slot.create({
+  await prisma.slot.create({
     data: {
       coachId: coach2.id,
       startTime: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3).toISOString(),
+      satisfaction: null,
+      notes: null,
+    },
+  });
+
+  // Create Past Slots for Coach Alice and Student Charlie
+  await prisma.slot.create({
+    data: {
+      coachId: coach1.id,
+      studentId: student1.id, // Assign to Student Charlie
+      startTime: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(), // 5 days ago
+      satisfaction: 5,
+      notes: "Excellent session. Charlie was very engaged.",
+    },
+  });
+
+  await prisma.slot.create({
+    data: {
+      coachId: coach1.id,
+      studentId: student2.id, // Assign to Student Dana
+      startTime: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
+      satisfaction: 4,
+      notes: "Good session. Dana needs to work on her timing.",
     },
   });
 

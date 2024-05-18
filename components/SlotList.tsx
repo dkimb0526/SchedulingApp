@@ -21,11 +21,24 @@ const SlotList = ({ slots, role, onSelectSlot, onBookSlot }) => {
               <button onClick={() => alert(`Notes: ${slot.notes}`)}>
                 View Notes
               </button>
+              {slot.satisfaction !== null && (
+                <p>Satisfaction: {slot.satisfaction}</p>
+              )}
             </>
           ) : role === "student" && slot.coach ? (
             <>
               <p>Coach: {slot.coach.name}</p>
-              <button onClick={() => onBookSlot(slot.id)}>Book Slot</button>
+              {slot.studentId && (
+                <button onClick={() => alert(`Phone: ${slot.coach.phone}`)}>
+                  View Phone
+                </button>
+              )}
+              {slot.satisfaction !== null && (
+                <p>Satisfaction: {slot.satisfaction}</p>
+              )}
+              {!slot.studentId && (
+                <button onClick={() => onBookSlot(slot.id)}>Book Slot</button>
+              )}
             </>
           ) : null}
           {onSelectSlot && (

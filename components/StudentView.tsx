@@ -9,7 +9,7 @@ const StudentView = ({ studentId }) => {
     try {
       const response = await axios.get(`/api/students/${studentId}`);
       setStudentData(response.data);
-      console.log("Student data fetched:", response.data); // Add logging
+      console.log("Student data fetched:", response.data);
     } catch (error) {
       console.error("Error fetching student data:", error);
     }
@@ -19,30 +19,29 @@ const StudentView = ({ studentId }) => {
     fetchStudentData();
   }, [studentId]);
 
-  // Log updated studentData whenever it changes
   useEffect(() => {
     console.log("Updated studentData:", studentData);
   }, [studentData]);
 
   if (!studentData) return <p>Loading...</p>;
 
-  const { studentSlots, availableSlots } = studentData;
+  const { studentSlots, availableSlots, name } = studentData;
   const upcomingSlots = studentSlots.filter(
     (slot) => new Date(slot.startTime) > new Date()
   );
 
-  console.log("Available slots:", availableSlots); // Add logging
-  console.log("Upcoming slots:", upcomingSlots); // Add logging
+  console.log("Available slots:", availableSlots);
+  console.log("Upcoming slots:", upcomingSlots);
 
   const handleBookSlot = async (slotId) => {
     try {
-      console.log(`Booking slot ${slotId} for student ${studentId}`); // Add logging
+      console.log(`Booking slot ${slotId} for student ${studentId}`);
       const response = await axios.post(`/api/slots/book`, {
         slotId,
         studentId,
       });
-      console.log("Booking response:", response.data); // Add logging
-      fetchStudentData(); // Refetch student data after booking to update the state
+      console.log("Booking response:", response.data);
+      fetchStudentData();
     } catch (error) {
       console.error("Error booking slot:", error);
     }
@@ -50,7 +49,7 @@ const StudentView = ({ studentId }) => {
 
   return (
     <div>
-      <h2>Student View</h2>
+      <h2>{name} View</h2>
       <h3>Available Slots</h3>
       <SlotList
         slots={availableSlots}
